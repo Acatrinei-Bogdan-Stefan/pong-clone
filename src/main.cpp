@@ -1,7 +1,7 @@
 #include <raylib.h>
 #include <iostream>
 
-// Class
+// Ball Class
 class Ball
 {
 // Variables
@@ -33,7 +33,7 @@ void Update()
 
 };
 
-
+//Paddle class
 class Paddle 
 {
 public:
@@ -45,10 +45,48 @@ void Draw()
 {
     DrawRectangle(x, y, width, height, WHITE);
 }
+
+void Update()
+{
+    if(IsKeyDown(KEY_UP))
+    {
+        y = y - speed;
+    }
+    if(IsKeyDown(KEY_DOWN))
+    {
+        y = y + speed;
+    }
+
+    if(y <= 0)
+    {
+        y = 0;
+    }
+    if(y + height >= GetScreenHeight())
+    {
+        y = GetScreenHeight() - height;
+    }
+}
+
+};
+
+// Chiled of the Paddle Class (Inheritance)
+class CpuPaddle: public Paddle
+{
+    public:
+
+    void Update(int ball_y)
+    {
+        if(y = height / 2 > ball_y)
+        {
+            y = y - speed; 
+        }
+    }
 };
 
 // Object Copy
 Ball ball;
+Paddle player;
+CpuPaddle cpu;
 
 int main() 
 {
@@ -64,6 +102,18 @@ int main()
     ball.speed_x = 7;
     ball.speed_y = 7;
 
+    player.width = 25;
+    player.height = 120;
+    player.x = screenWidth - player.width - 10;
+    player.y = screenHeight/2 - player.height/2;
+    player.speed = 6;
+
+    cpu.height = 120;
+    cpu.width = 25;
+    cpu.x = 10;
+    cpu.y = screenHeight/2 - cpu.height / 2;
+    cpu.speed = 6;
+
     InitWindow(screenWidth, screenHeight, "My Pong Game");
     SetTargetFPS(60);
 
@@ -76,11 +126,15 @@ int main()
             ClearBackground(BLACK);
             // Update
             ball.Update();
+            player.Update();
 
             // Draw
             ball.Draw();
-            DrawRectangle(10, screenHeight/2-60, 25, 120, WHITE);
+            player.Draw();
+            cpu.Draw();
+
             DrawLine(screenWidth/2 ,0 ,screenWidth/2, screenHeight, WHITE);
+            
 
         EndDrawing();
 
